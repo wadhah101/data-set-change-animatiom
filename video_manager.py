@@ -19,7 +19,8 @@ def make_vid(folder_name, frame_Rate):
     current_frame = 0
     im = cv2.imread(folder_name + list[0])
     height, width, layers = im.shape
-    vid = cv2.VideoWriter('.vid.mkv', 0, frame_Rate, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'VP90')
+    vid = cv2.VideoWriter('.vid.mkv', fourcc, frame_Rate, (width, height))
     for i in list:
         im = cv2.imread(folder_name + i)
         vid.write(im)
@@ -40,10 +41,11 @@ def delete_files(folder_name):
     for i in l:
         os.remove(folder_name + i)
 
+
 # use ffmpeg for compression (Drastically reduce file size  from 3gb to around 1 mb )
-def compress_to_x265(video_in, output):
+def compress_to_vp9(video_in, output):
     print("Compressing video!")
-    commands = 'ffmpeg -y -i {} -c:v libx265 -crf 28 -c:a aac -b:a 128k {}' \
+    commands = 'ffmpeg -y -i {} -c:v libvpx-vp9 -crf 28 -c:a aac -b:a 128k {}' \
         .format(video_in, output) \
         .split(sep=' ')
     null_file = open(os.devnull, 'w')

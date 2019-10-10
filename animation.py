@@ -39,21 +39,28 @@ def make_video(d, delta, frame_rate, duration):
     video_manager.make_vid(image_folder_name, frame_rate)
 
 
-def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60):
+def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60, compression=True):
     delta = new_data_set - original_data_set
     make_video(original_data_set, delta, frame_rate, duration)
-    video_manager.compress_to_x265('.vid.mkv', 'output.mkv')
 
     # concatenate the frame using opencv2 and export as video
     video_manager.delete_files(image_folder_name)
     os.rmdir('.cache')
-    os.remove('.vid.mkv')
+
+    if compression:
+        video_manager.compress_to_vp9('.vid.mkv', 'output.mkv')
+        os.remove('.vid.mkv')
+    else:
+        os.rename('.vid.mkv', 'output.mkv')
     print('Done !')
 
 
 # example
 x = np.arange(-10, 10, 0.001)
-o = x**2
+o = x ** 2
 o2 = np.sin(x)
 
-data_animation(o, o2, duration=1, frame_rate=60)
+data_animation(original_data_set=o
+               , new_data_set=o2
+               , duration=5
+               , frame_rate=60)
