@@ -46,6 +46,7 @@ def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60):
 
     # concatenate the frame using opencv2 and export as video
     video_manager.delete_files(image_folder_name)
+    os.rmdir('.cache')
     os.remove('.vid.mkv')
     print('Done !')
 
@@ -55,4 +56,4 @@ x = np.arange(-10, 10, 0.001)
 o = x**2
 o2 = np.sin(x)
 
-data_animation(o, o2, duration=3, frame_rate=60)
+data_animation(o, o2, duration=1, frame_rate=60)
