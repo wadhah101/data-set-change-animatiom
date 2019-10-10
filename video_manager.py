@@ -1,14 +1,15 @@
-import cv2
 import os
-import multiprocessing as mp
-import numpy as np
 import subprocess
+
+import cv2
+from tqdm import tqdm
 
 
 # make a video from files found in the specified folder
 # note : files should be in alphabetic order
 # note : folder name should NOT end with /
 # ONLY a path to the folder is needed
+# todo maybe parallelise the video encoding process
 def make_vid(folder_name, frame_Rate):
     list = os.listdir(folder_name)
     list.sort()
@@ -21,13 +22,10 @@ def make_vid(folder_name, frame_Rate):
     height, width, layers = im.shape
     fourcc = cv2.VideoWriter_fourcc(*'VP90')
     vid = cv2.VideoWriter('.vid.mkv', fourcc, frame_Rate, (width, height))
-    for i in list:
+    for i in tqdm(list):
         im = cv2.imread(folder_name + i)
         vid.write(im)
         current_frame += 1
-
-        # progress bar
-        # print('Making Video : {:.2f}%'.format(current_frame * 100 / frame_count))
 
     cv2.destroyAllWindows()
     vid.release()
@@ -42,7 +40,7 @@ def delete_files(folder_name):
         os.remove(folder_name + i)
 
 
-# use ffmpeg for compression (Drastically reduce file size  from 3gb to around 1 mb )
+# use ffmpeg for compression
 def compress_to_vp9(video_in, output):
     print("Compressing video!")
     commands = 'ffmpeg -y -i {} -c:v libvpx-vp9 -crf 28 -c:a aac -b:a 128k {}' \

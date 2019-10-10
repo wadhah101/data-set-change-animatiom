@@ -1,8 +1,10 @@
+import os
+from multiprocessing import Pool, cpu_count
+
 import matplotlib.pyplot as plt
 import numpy as np
+
 import video_manager
-from multiprocessing import Pool, cpu_count
-import os
 
 image_folder_name = '.cache'
 
@@ -30,7 +32,7 @@ def make_video(d, delta, frame_rate, duration):
     l2 = max(max(d), max(d + delta)) * 1.1
     limits = (l1, l2)
 
-    for i in range((frame_rate * duration) + 1):
+    for i in np.arange(0, frame_rate * duration, 1):
         p.apply_async(make_frame, (i, d, delta, frame_rate, duration, limits))
     p.close()
     p.join()
@@ -39,7 +41,7 @@ def make_video(d, delta, frame_rate, duration):
     video_manager.make_vid(image_folder_name, frame_rate)
 
 
-def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60, compression=True):
+def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60, compression=False):
     delta = new_data_set - original_data_set
     make_video(original_data_set, delta, frame_rate, duration)
 
@@ -62,5 +64,5 @@ o2 = np.sin(x)
 
 data_animation(original_data_set=o
                , new_data_set=o2
-               , duration=5
+               , duration=10
                , frame_rate=60)
