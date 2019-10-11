@@ -58,5 +58,5 @@ o2 = x * 0
 
 data_animation(original_data_set=o
                , new_data_set=o2
-               , duration=1
+               , duration=10
                , frame_rate=60)
