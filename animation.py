@@ -38,26 +38,25 @@ def make_video(d, delta, frame_rate, duration):
     p.join()
 
     print('Concatenating frames !')
-    # video_manager.make_vid(image_folder_name, frame_rate)
+
+    # concatenate frames using ffmpeg
     video_manager.make_vid_ffmpeg(image_folder_name, frame_rate, 'out.mkv')
 
 
 def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60):
     delta = new_data_set - original_data_set
     make_video(original_data_set, delta, frame_rate, duration)
-
-    # concatenate the frame using opencv2 and export as video
     video_manager.delete_files(image_folder_name)
-    os.rmdir('.cache')
+    os.rmdir(image_folder_name)
     print('Done !')
 
 
 # example
 x = np.arange(-10, 10, 0.001)
 o = x ** 2
-o2 = np.sin(x)
+o2 = x * 0
 
 data_animation(original_data_set=o
                , new_data_set=o2
                , duration=1
-               , frame_rate=24)
+               , frame_rate=60)

@@ -19,4 +19,5 @@ def make_vid_ffmpeg(folder_name, frame_Rate, output):
         .format(frame_Rate, folder_name, output) \
         .split(sep=' ')
     null_file = open(os.devnull, 'w')
-    subprocess.run(commands, stdout=null_file, stderr=null_file, stdin=null_file)
+    child = subprocess.Popen(commands)
+    child.wait()
