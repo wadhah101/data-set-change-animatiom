@@ -19,7 +19,7 @@ def make_frame(i, data_set, delta, frame_rate, duration, limits):
 
 
 # generate multiple frames at the same time using multiprocessing pool
-# IT'S NOT ADVISED TO USE ALL AVAILABLE CPUS , THE PC MAY BECOME IRRESPONSIBLE
+# IT'S NOT ADVISED TO USE ALL AVAILABLE CPUS , THE PC MAY BECOME UNRESPONSIVE
 # todo : add some still frames at the end of the video
 def make_video(data_set, delta, frame_rate, duration):
     if image_folder_name not in os.listdir():
