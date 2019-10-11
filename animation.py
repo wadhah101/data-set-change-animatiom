@@ -22,6 +22,7 @@ def make_frame(i, data_set, delta, frame_rate, duration, limits):
 # IT'S NOT ADVISED TO USE ALL AVAILABLE CPUS , THE PC MAY BECOME UNRESPONSIVE
 # todo : add some still frames at the end of the video
 def make_video(data_set, delta, frame_rate, duration):
+    print('Building frames !')
     if image_folder_name not in os.listdir():
         os.mkdir(image_folder_name)
     n_workers = cpu_count() - 1 if cpu_count() > 1 else 1
@@ -60,6 +61,7 @@ def main(original_data_set, new_data_set, duration=5, frame_rate=60):
     check_ffmpeg()
     delta = new_data_set - original_data_set
     make_video(original_data_set, delta, frame_rate, duration)
+    print('Deleting cache files !')
     shutil.rmtree(image_folder_name)
     print('Done !')
 
