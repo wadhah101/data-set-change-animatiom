@@ -14,7 +14,7 @@ def make_frame(i, d, delta, frame_rate, duration, limits):
     plt.figure(figsize=(19.20, 10.80))
     plt.ylim(limits[0], limits[1])
     plt.plot(x, d + (i * 1.0 / (frame_rate * duration)) * delta)
-    plt.savefig('{}/{:05d}'.format(image_folder_name, i))
+    plt.savefig('{}/img{:05d}'.format(image_folder_name, i))
     plt.close()
 
 
@@ -38,22 +38,17 @@ def make_video(d, delta, frame_rate, duration):
     p.join()
 
     print('Concatenating frames !')
-    video_manager.make_vid(image_folder_name, frame_rate)
+    # video_manager.make_vid(image_folder_name, frame_rate)
+    video_manager.make_vid_ffmpeg(image_folder_name, frame_rate, 'out.mkv')
 
 
-def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60, compression=False):
+def data_animation(original_data_set, new_data_set, duration=5, frame_rate=60):
     delta = new_data_set - original_data_set
     make_video(original_data_set, delta, frame_rate, duration)
 
     # concatenate the frame using opencv2 and export as video
     video_manager.delete_files(image_folder_name)
     os.rmdir('.cache')
-
-    if compression:
-        video_manager.compress_to_vp9('.vid.mkv', 'output.mkv')
-        os.remove('.vid.mkv')
-    else:
-        os.rename('.vid.mkv', 'output.mkv')
     print('Done !')
 
 
@@ -64,5 +59,5 @@ o2 = np.sin(x)
 
 data_animation(original_data_set=o
                , new_data_set=o2
-               , duration=10
-               , frame_rate=60)
+               , duration=1
+               , frame_rate=24)
