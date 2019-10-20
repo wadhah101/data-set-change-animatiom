@@ -14,17 +14,17 @@ pbar = tqdm(total=7200)
 def make_frame(i, data_set, delta, frame_rate, duration, limits):
     plt.figure(figsize=(19.20, 10.80))
     plt.ylim(limits[0], limits[1])
-    pbar.update(4)
+    pbar.update(2)
     plt.plot(x, data_set + (i * 1.0 / (frame_rate * duration)) * delta)
-    plt.savefig('.cache/img{:05d}'.format(i))
+    plt.savefig(os.path.join('.cache', 'img{:05d}'.format(i)))
     plt.close()
 
 
 # generate multiple frames at the same time using multiprocessing pool
 # IT'S NOT ADVISED TO USE ALL AVAILABLE CPUS , THE PC MAY BECOME UNRESPONSIVE
-# todo : add some still frames at the end of the video
+# todo : add some still frames anextt the end of the video
 def make_video(data_set, delta, frame_rate, duration):
-    print('Building frames !', flush=True)
+    print('Building frames !')
     if '.cache' not in os.listdir():
         os.mkdir('.cache')
     n_workers = cpu_count() // 2
@@ -33,7 +33,8 @@ def make_video(data_set, delta, frame_rate, duration):
     l2 = max(max(data_set), max(data_set + delta)) * 1.1
     limits = (l1, l2)
     for i in np.arange(0, frame_rate * duration, 1):
-        p.apply_async(make_frame, (i, data_set, delta, frame_rate, duration, limits))
+        args = (i, data_set, delta, frame_rate, duration, limits)
+        p.apply_async(make_frame, args)
     p.close()
     p.join()
 
@@ -65,9 +66,10 @@ def main(original_data_set, new_data_set, duration=1, frame_rate=60):
 
 # example
 x = np.arange(-10, 10, 0.01)
-o = np.abs(x)
-o2 = 3 * np.sin(x)
+o = np.sin(x)
+o2 = np.sin(x) + np.sin(x * 7)
 
 if __name__ == '__main__':
     main(original_data_set=o
+         , duration=15
          , new_data_set=o2)
