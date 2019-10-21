@@ -5,24 +5,23 @@ from multiprocessing import Pool, cpu_count
 
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
-
-pbar = tqdm(total=7200)
 
 
+# todo proper tqdm implementation
 # todo : offload heavy calculation work to gpu using pyopencl
+# todo : add some still frames anextt the end of the video
+
+
 def make_frame(i, data_set, delta, frame_rate, duration, limits):
     plt.figure(figsize=(19.20, 10.80))
     plt.ylim(limits[0], limits[1])
-    pbar.update(2)
     plt.plot(x, data_set + (i * 1.0 / (frame_rate * duration)) * delta)
-    plt.savefig(os.path.join('.cache', 'img{:05d}'.format(i)))
+    plt.savefig(os.path.join('.cache', 'img{:07d}'.format(i)))
     plt.close()
 
 
 # generate multiple frames at the same time using multiprocessing pool
 # IT'S NOT ADVISED TO USE ALL AVAILABLE CPUS , THE PC MAY BECOME UNRESPONSIVE
-# todo : add some still frames anextt the end of the video
 def make_video(data_set, delta, frame_rate, duration):
     print('Building frames !')
     if '.cache' not in os.listdir():
@@ -41,7 +40,7 @@ def make_video(data_set, delta, frame_rate, duration):
     print('Concatenating frames !')
 
     # concatenate frames using ffmpeg
-    commands = 'ffmpeg -y -framerate {} -i .cache/img%05d.png -c:v libx265 video.mkv'.format(frame_rate).split()
+    commands = 'ffmpeg -y -framerate {} -i .cache/img%07d.png -c:v libx265 video.mkv'.format(frame_rate).split()
     null_file = open(os.devnull, 'w')
     child = subprocess.Popen(commands, stderr=null_file)
     child.wait()
@@ -66,10 +65,11 @@ def main(original_data_set, new_data_set, duration=1, frame_rate=60):
 
 # example
 x = np.arange(-10, 10, 0.01)
-o = np.sin(x)
-o2 = np.sin(x) + np.sin(x * 7)
+y1 = np.sin(x)
+y2 = np.sin(2 * x) + np.cos(x)
 
 if __name__ == '__main__':
-    main(original_data_set=o
-         , duration=15
-         , new_data_set=o2)
+    main(original_data_set=y1
+         , duration=5
+         , frame_rate=60
+         , new_data_set=y2)
