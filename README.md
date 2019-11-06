@@ -1,6 +1,6 @@
 # data-set-change-animatiom
 
-A simple yet effective python script that generates a transation animation between two distinct functions.
+A simple yet effective python script that generates a transation animation between two functions.
 
 
 ### exemple :
